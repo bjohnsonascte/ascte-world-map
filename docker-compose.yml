@@ -1,0 +1,14 @@
+services:
+  ascte-map:
+    build: .
+    image: ascte-world-map:latest
+    container_name: ascte-world-map
+    ports:
+      # host:container — change 8080 to whatever port you want on the server
+      - "8080:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

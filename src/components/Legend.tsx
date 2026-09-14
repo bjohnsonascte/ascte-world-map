@@ -23,10 +23,10 @@ export default function Legend({ maxValue }: LegendProps) {
     <div
       className="flex flex-col items-end gap-1"
       role="img"
-      aria-label={`Color legend: 0 to ${maxValue}+ students per country`}
+      aria-label={`Color legend: 0 to ${maxValue}+ universities per state`}
     >
       <span className="text-xs font-medium text-gray-500">
-        Student density
+        Universities per state
       </span>
       <svg
         width={LEGEND_WIDTH}

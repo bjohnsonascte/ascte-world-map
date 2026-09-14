@@ -1,9 +1,93 @@
 @import "tailwindcss";
 
+/* ── Connection-arc animation ─────────────────────────────────── */
+
+/*
+ * Animated "travelling dash" effect:
+ *   - stroke-dasharray creates a short visible segment + long gap
+ *   - animating stroke-dashoffset slides that segment along the path
+ *   - the result looks like a small pulse of light racing from ASCTE
+ *     to each destination school
+ */
+@keyframes flow-dash {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.connection-base {
+  pointer-events: none;
+}
+
+.connection-arc {
+  /* Values are in pathLength units (each arc is normalized to 100) so the
+     travelling dash looks identical regardless of the arc's real length.
+     A short 8-unit dash keeps the pulse small. */
+  stroke-dasharray: 8 92;
+  stroke-dashoffset: 100;
+  animation: flow-dash 3s linear infinite;
+  pointer-events: none;
+}
+
+/* ── ASCTE origin pulse ─────────────────────────────────────── */
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes pulse-ring {
+  0%   { r: 4;  opacity: 0.6; }
+  100% { r: 12; opacity: 0;   }
+}
+
+.ascte-origin-dot {
+  fill: #BE1E2D;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.ascte-origin-ring {
+  fill: none;
+  stroke: #BE1E2D;
+  stroke-width: 1;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/*
+ * Respect reduced-motion and protect low-powered / low-refresh displays:
+ * turn off the continuous SVG animations entirely. The arcs and origin
+ * marker remain fully visible, just static.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .connection-arc,
+  .ascte-origin-dot,
+  .ascte-origin-ring {
+    animation: none !important;
+  }
+  .ascte-origin-ring {
+    display: none;
+  }
+}
+
 @theme {
   --color-ascte-crimson: #BE1E2D;
   --color-ascte-navy: #0C2340;
   --color-ascte-light: #fde8ea;
+}
+
+/*
+ * Full-screen layout (all orientations).
+ * The map panel is a flex column: a fixed header on top and the map
+ * filling the rest.  Making the map's wrapper `flex: 1` lets the SVG
+ * grow to consume all remaining height instead of a fixed aspect box.
+ */
+.portrait-map-panel > div:last-child {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /*

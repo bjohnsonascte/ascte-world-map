@@ -1,39 +1,28 @@
-import { useState, useCallback, useRef } from "react";
-import { Marker } from "react-simple-maps";
-import { schoolData, type School } from "../data/schools";
-
-const LOGO_SIZE = 18;
+import { useState, useCallback, useRef, memo } from "react";
+import { Marker, useMapContext } from "react-simple-maps";
+import { schoolData, logoSources, type School } from "../data/schools";
 
 interface SchoolMarkersProps {
   onHover: (content: string, x: number, y: number) => void;
   onLeave: () => void;
+  /** Current map zoom — used to keep markers a constant visual size */
+  zoom: number;
 }
 
-function getInitials(shortName: string): string {
-  return shortName
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 3)
-    .toUpperCase();
-}
-
-export default function SchoolMarkers({
-  onHover,
-  onLeave,
-}: SchoolMarkersProps) {
+function SchoolMarkers({ onHover, onLeave, zoom }: SchoolMarkersProps) {
+  const { projection } = useMapContext();
   const [hovered, setHovered] = useState<string | null>(null);
-  const [failedLogos, setFailedLogos] = useState<Set<string>>(new Set());
+  // Which logo source (Clearbit → DuckDuckGo → Google) each school is currently
+  // trying. Advances on load error; past the end we render a plain dot.
+  const [logoIdx, setLogoIdx] = useState<Record<string, number>>({});
   const touchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const label = (s: School) => `${s.name} — ${s.state}`;
 
   const handleMouseEnter = useCallback(
     (school: School, event: React.MouseEvent) => {
       setHovered(school.name);
-      onHover(
-        `${school.name} — ${school.studentCount} students`,
-        event.clientX,
-        event.clientY
-      );
+      onHover(label(school), event.clientX, event.clientY);
     },
     [onHover]
   );
@@ -49,11 +38,7 @@ export default function SchoolMarkers({
       event.stopPropagation();
       const touch = event.touches[0] || event.changedTouches[0];
       setHovered(school.name);
-      onHover(
-        `${school.name} — ${school.studentCount} students`,
-        touch.clientX,
-        touch.clientY
-      );
+      onHover(label(school), touch.clientX, touch.clientY);
       if (touchTimer.current) clearTimeout(touchTimer.current);
       touchTimer.current = setTimeout(() => {
         setHovered(null);
@@ -64,80 +49,81 @@ export default function SchoolMarkers({
   );
 
   const handleImageError = useCallback((schoolName: string) => {
-    setFailedLogos((prev) => new Set(prev).add(schoolName));
+    setLogoIdx((prev) => ({
+      ...prev,
+      [schoolName]: (prev[schoolName] ?? 0) + 1,
+    }));
   }, []);
 
   return (
     <>
       {schoolData.map((school) => {
+        // geoAlbersUsa returns null for non-US coordinates — skip those.
+        if (!projection(school.coordinates)) return null;
+
         const isHovered = hovered === school.name;
-        const size = isHovered ? LOGO_SIZE * 1.5 : LOGO_SIZE;
-        const logoFailed = failedLogos.has(school.name);
-        const clipId = `clip-${school.shortName.replace(/\s+/g, "-")}`;
+        const s = 1 / zoom; // keep markers a constant on-screen size
+        const sources = logoSources(school.domain);
+        const logoUrl = sources[logoIdx[school.name] ?? 0];
+        // Show the logo when a source is available; fall back to a dot once
+        // every source for this school has failed.
+        const showLogo = !!logoUrl;
+        const clipId = `clip-${school.name.replace(/[^a-zA-Z0-9]/g, "-")}`;
+
+        // Logo marker size (screen px), enlarged a bit on hover
+        const logoPx = (isHovered ? 24 : 18) * s;
 
         return (
           <Marker key={school.name} coordinates={school.coordinates}>
             <g
               onMouseEnter={(e) => handleMouseEnter(school, e)}
-              onMouseMove={(e) =>
-                onHover(
-                  `${school.name} — ${school.studentCount} students`,
-                  e.clientX,
-                  e.clientY
-                )
-              }
+              onMouseMove={(e) => onHover(label(school), e.clientX, e.clientY)}
               onMouseLeave={handleMouseLeave}
               onTouchStart={(e) => handleTouch(school, e)}
+              onClick={(e) => e.stopPropagation()}
               style={{ cursor: "pointer" }}
             >
-              <circle
-                r={size / 2 + 2}
-                fill="white"
-                stroke={isHovered ? "#BE1E2D" : "#9ca3af"}
-                strokeWidth={isHovered ? 1.5 : 0.75}
-                filter={isHovered ? "url(#marker-shadow)" : undefined}
-                style={{ transition: "all 150ms ease" }}
-              />
+              {/* Larger transparent hit area for easier hovering */}
+              <circle r={(showLogo ? logoPx / 2 + 2 : 4) * 1} fill="transparent" />
 
-              {logoFailed ? (
-                <text
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontSize={size * 0.35}
-                  fontWeight="bold"
-                  fill="#374151"
-                  style={{ pointerEvents: "none" }}
-                >
-                  {getInitials(school.shortName)}
-                </text>
-              ) : (
+              {showLogo ? (
                 <>
+                  {/* White circular backing + border */}
+                  <circle
+                    r={logoPx / 2 + 1.5 * s}
+                    fill="white"
+                    stroke={isHovered ? "#BE1E2D" : "#9ca3af"}
+                    strokeWidth={(isHovered ? 1.2 : 0.75) * s}
+                  />
                   <clipPath id={clipId}>
-                    <circle r={size / 2} />
+                    <circle r={logoPx / 2} />
                   </clipPath>
                   <image
-                    href={school.logoUrl}
-                    x={-size / 2}
-                    y={-size / 2}
-                    width={size}
-                    height={size}
+                    href={logoUrl}
+                    x={-logoPx / 2}
+                    y={-logoPx / 2}
+                    width={logoPx}
+                    height={logoPx}
                     clipPath={`url(#${clipId})`}
                     preserveAspectRatio="xMidYMid slice"
                     onError={() => handleImageError(school.name)}
-                    style={{ transition: "all 150ms ease" }}
                   />
                 </>
+              ) : (
+                <circle
+                  r={(isHovered ? 3 : 1.6) * s}
+                  fill={isHovered ? "#0C2340" : "#BE1E2D"}
+                  stroke="#fff"
+                  strokeWidth={(isHovered ? 0.8 : 0.4) * s}
+                  style={{ transition: "r 120ms ease, fill 120ms ease" }}
+                />
               )}
             </g>
           </Marker>
         );
       })}
-
-      <defs>
-        <filter id="marker-shadow" x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodOpacity="0.2" />
-        </filter>
-      </defs>
     </>
   );
 }
+
+export default memo(SchoolMarkers);

@@ -1,0 +1,11 @@
+# Treat images as binary so Git never applies EOL conversion (which would
+# corrupt them). Important for the bundled school logos in public/logos.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+
+# Normalize line endings for text files; check out as LF (deploy target is Linux)
+* text=auto eol=lf

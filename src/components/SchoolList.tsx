@@ -1,18 +1,19 @@
 import { useState, useMemo } from "react";
 import { schoolData } from "../data/schools";
+import SchoolLogo from "./SchoolLogo";
 
 interface SchoolListProps {
-  selectedCountry: string | null;
+  selectedState: string | null;
 }
 
-export default function SchoolList({ selectedCountry }: SchoolListProps) {
+export default function SchoolList({ selectedState }: SchoolListProps) {
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
     let results = [...schoolData];
 
-    if (selectedCountry) {
-      results = results.filter((s) => s.country === selectedCountry);
+    if (selectedState) {
+      results = results.filter((s) => s.state === selectedState);
     }
 
     if (search.trim()) {
@@ -21,12 +22,12 @@ export default function SchoolList({ selectedCountry }: SchoolListProps) {
         (s) =>
           s.name.toLowerCase().includes(q) ||
           s.shortName.toLowerCase().includes(q) ||
-          s.country.toLowerCase().includes(q)
+          s.state.toLowerCase().includes(q)
       );
     }
 
-    return results.sort((a, b) => b.studentCount - a.studentCount);
-  }, [selectedCountry, search]);
+    return results.sort((a, b) => a.name.localeCompare(b.name));
+  }, [selectedState, search]);
 
   return (
     <div className="flex h-full flex-col">
@@ -35,9 +36,9 @@ export default function SchoolList({ selectedCountry }: SchoolListProps) {
           Schools Attended
         </h2>
         <p className="mt-0.5 text-xs text-gray-400">
-          {selectedCountry
-            ? `Filtered: ${selectedCountry} (${filtered.length})`
-            : `${filtered.length} schools — sorted by student count`}
+          {selectedState
+            ? `Filtered: ${selectedState} (${filtered.length})`
+            : `${filtered.length} universities — sorted A–Z`}
         </p>
         <input
           type="text"
@@ -51,7 +52,7 @@ export default function SchoolList({ selectedCountry }: SchoolListProps) {
       <ul
         className="flex-1 divide-y divide-gray-50 overflow-y-auto"
         role="list"
-        aria-label="Schools ranked by student count"
+        aria-label="Universities attended by ASCTE students"
       >
         {filtered.length === 0 ? (
           <li className="px-5 py-8 text-center text-sm text-gray-400">
@@ -61,32 +62,26 @@ export default function SchoolList({ selectedCountry }: SchoolListProps) {
           filtered.map((school, i) => (
             <li
               key={school.name}
-              className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-gray-50"
+              className="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-gray-50"
             >
-              <span className="w-5 shrink-0 text-xs font-medium text-gray-300">
+              <span className="w-6 shrink-0 text-xs font-medium text-gray-300">
                 {i + 1}
               </span>
 
-              <img
-                src={school.logoUrl}
-                alt={school.shortName}
-                className="h-8 w-8 shrink-0 rounded-full border border-gray-200 bg-white object-contain p-0.5"
+              <SchoolLogo
+                domain={school.domain}
+                shortName={school.shortName}
+                className="h-8 w-8 shrink-0 rounded-full border border-gray-200 p-0.5"
               />
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-gray-800">
-                  {school.shortName}
+                  {school.name}
                 </p>
                 <p className="truncate text-xs text-gray-400">
-                  {school.country}
+                  {school.state}
+                  {school.international ? " (International)" : ""}
                 </p>
-              </div>
-
-              <div className="shrink-0 text-right">
-                <span className="text-sm font-semibold text-ascte-crimson">
-                  {school.studentCount}
-                </span>
-                <p className="text-[10px] text-gray-400">students</p>
               </div>
             </li>
           ))

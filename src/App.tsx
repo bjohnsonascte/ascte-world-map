@@ -1,75 +1,73 @@
 import { useState, useCallback } from "react";
-import WorldMap from "./components/WorldMap";
+import UsMap from "./components/UsMap";
 import SchoolList from "./components/SchoolList";
-import {
-  getTotalStudentCount,
-  getCountriesWithStudents,
-} from "./data/students";
+import { getStatesRepresented } from "./data/states";
 import { getTotalSchoolCount } from "./data/schools";
 
 function App() {
-  const total = getTotalStudentCount();
-  const countriesCount = getCountriesWithStudents();
   const schoolCount = getTotalSchoolCount();
+  const statesCount = getStatesRepresented();
 
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
 
-  const handleCountryClick = useCallback((countryName: string) => {
-    setSelectedCountry((prev) => (prev === countryName ? null : countryName));
+  const handleStateClick = useCallback((stateName: string) => {
+    setSelectedState((prev) => (prev === stateName ? null : stateName));
+  }, []);
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedState(null);
   }, []);
 
   return (
-    <div className="portrait-layout bg-ascte-navy px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-      <div className="portrait-container mx-auto max-w-7xl">
-        <header className="mb-6 shrink-0 text-center sm:mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            ASCTE Student World Map
+    <div className="portrait-layout flex h-[100dvh] flex-col overflow-hidden bg-ascte-navy px-4 py-4 sm:px-6 lg:px-8">
+      <div className="portrait-container mx-auto flex w-full min-h-0 flex-1 flex-col">
+        <header className="mb-3 shrink-0 text-center sm:mb-4">
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            ASCTE University Map
           </h1>
-          <p className="mt-2 text-blue-200/70">
-            Tracking our students at schools across the globe
+          <p className="mt-1 text-sm text-blue-200/70">
+            Acceptances &amp; matriculation — Classes of 2023–2026
           </p>
-          <div className="mt-4 inline-flex gap-8 rounded-full border border-white/10 bg-white/10 px-6 py-2 text-sm text-blue-100/70 backdrop-blur">
+          <div className="mt-3 inline-flex gap-8 rounded-full border border-white/10 bg-white/10 px-6 py-2 text-sm text-blue-100/70 backdrop-blur">
             <span>
-              <strong className="text-white">{total}</strong> total students
+              <strong className="text-white">{schoolCount}</strong> universities
             </span>
             <span>
-              <strong className="text-white">{countriesCount}</strong> countries
-            </span>
-            <span>
-              <strong className="text-white">{schoolCount}</strong> schools
+              <strong className="text-white">{statesCount}</strong> states
             </span>
           </div>
         </header>
 
-        <div className="portrait-grid grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
-          <div className="portrait-map-panel overflow-hidden rounded-2xl bg-white shadow-xl">
-            <div className="border-b border-gray-100 px-6 py-4">
+        <div className="portrait-grid grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
+          <div className="portrait-map-panel flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+            <div className="shrink-0 border-b border-gray-100 px-6 py-4">
               <h2 className="text-lg font-semibold text-gray-800">
-                Students by Country
+                Universities by State
               </h2>
-              {selectedCountry && (
+              {selectedState && (
                 <button
-                  onClick={() => setSelectedCountry(null)}
+                  onClick={() => setSelectedState(null)}
                   className="mt-1 text-xs text-ascte-crimson hover:underline"
                 >
-                  Showing: {selectedCountry} — click to clear
+                  Showing: {selectedState} — click to clear
                 </button>
               )}
             </div>
-            <WorldMap
-              selectedCountry={selectedCountry}
-              onCountryClick={handleCountryClick}
+            <UsMap
+              selectedState={selectedState}
+              onStateClick={handleStateClick}
+              onClearSelection={handleClearSelection}
             />
           </div>
 
-          <div className="portrait-list-panel overflow-hidden rounded-2xl bg-white shadow-xl lg:h-[660px] lg:max-h-[660px]">
-            <SchoolList selectedCountry={selectedCountry} />
+          <div className="portrait-list-panel flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+            <SchoolList selectedState={selectedState} />
           </div>
         </div>
 
-        <footer className="mt-4 shrink-0 text-center text-xs text-blue-200/40 sm:mt-6">
-          Tap or click a country to filter schools. Data is for demonstration
-          purposes.
+        <footer className="mt-3 shrink-0 text-center text-xs text-blue-200/40">
+          Tap or click a state to filter universities. Data reflects ASCTE
+          acceptances &amp; matriculation.
         </footer>
       </div>
     </div>

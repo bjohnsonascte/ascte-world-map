@@ -3,6 +3,11 @@ declare module "react-simple-maps" {
 
   interface ComposableMapProps {
     projection?: string;
+    projectionConfig?: {
+      scale?: number;
+      center?: [number, number];
+      rotate?: [number, number, number];
+    };
     width?: number;
     height?: number;
     style?: React.CSSProperties;
@@ -44,8 +49,47 @@ declare module "react-simple-maps" {
     children?: React.ReactNode;
   }
 
+  interface ZoomableGroupProps {
+    center?: [number, number];
+    zoom?: number;
+    minZoom?: number;
+    maxZoom?: number;
+    onMoveEnd?: (position: {
+      coordinates: [number, number];
+      zoom: number;
+    }) => void;
+    translateExtent?: [[number, number], [number, number]];
+    filterZoomEvent?: (event: unknown) => boolean;
+    children?: React.ReactNode;
+  }
+
+  interface LineProps extends SVGProps<SVGPathElement> {
+    from?: [number, number];
+    to?: [number, number];
+    coordinates?: [number, number][];
+    stroke?: string;
+    strokeWidth?: number;
+    strokeLinecap?: string;
+    fill?: string;
+    className?: string;
+    style?: React.CSSProperties;
+  }
+
   export const ComposableMap: ComponentType<ComposableMapProps>;
   export const Geographies: ComponentType<GeographiesProps>;
   export const Geography: ComponentType<GeographyProps>;
   export const Marker: ComponentType<MarkerProps>;
+  export const Line: ComponentType<LineProps>;
+  export const ZoomableGroup: ComponentType<ZoomableGroupProps>;
+
+  interface MapProjection {
+    (coordinates: [number, number]): [number, number] | null;
+  }
+
+  export function useMapContext(): {
+    projection: MapProjection;
+    path: (feature: unknown) => string;
+    width: number;
+    height: number;
+  };
 }

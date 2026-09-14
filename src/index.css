@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ascte-crimson: #BE1E2D;
+  --color-ascte-navy: #0C2340;
+  --color-ascte-light: #fde8ea;
+}
+
+/*
+ * Portrait / vertical monitor layout
+ * When the viewport is taller than wide, switch to a stacked layout
+ * where both the map and school list share the screen without requiring
+ * the user to scroll past the map.
+ */
+@media (orientation: portrait) {
+  .portrait-layout {
+    height: 100dvh;
+    overflow: hidden;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .portrait-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .portrait-grid {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .portrait-map-panel {
+    flex: 0 0 55%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .portrait-map-panel > div:last-child {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .portrait-list-panel {
+    flex: 0 0 45%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+
+/* Tall landscape screens (e.g. a rotated ultrawide used vertically at >1024px width) */
+@media (min-width: 1024px) and (min-height: 1200px) {
+  .portrait-layout {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .portrait-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .portrait-grid {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .portrait-list-panel {
+    max-height: none !important;
+  }
+}

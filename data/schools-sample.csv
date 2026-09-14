@@ -1,0 +1,29 @@
+name,shortName,country,longitude,latitude,studentCount,logoFile
+University of Oxford,Oxford,United Kingdom,-1.2577,51.7520,5,oxford.png
+University of Cambridge,Cambridge,United Kingdom,0.1218,52.2053,4,cambridge.png
+Imperial College London,Imperial,United Kingdom,-0.1749,51.4988,3,imperial.png
+Technical University of Munich,TU Munich,Germany,11.5680,48.1351,4,tumunich.png
+Heidelberg University,Heidelberg,Germany,8.7065,49.3988,2,heidelberg.png
+Sorbonne University,Sorbonne,France,2.3428,48.8489,3,sorbonne.png
+ETH Zurich,ETH Zurich,Switzerland,8.5482,47.3769,3,ethzurich.png
+University of Toronto,U of T,Canada,-79.3957,43.6629,6,toronto.png
+McGill University,McGill,Canada,-73.5772,45.5048,3,mcgill.png
+University of British Columbia,UBC,Canada,-123.2460,49.2606,2,ubc.png
+University of Tokyo,U of Tokyo,Japan,139.7622,35.7126,4,utokyo.png
+Kyoto University,Kyoto,Japan,135.7807,35.0268,2,kyoto.png
+University of Melbourne,Melbourne,Australia,144.9612,-37.7983,3,melbourne.png
+University of Sydney,Sydney,Australia,151.1900,-33.8886,2,sydney.png
+Seoul National University,SNU,South Korea,126.9522,37.4601,3,snu.png
+KAIST,KAIST,South Korea,127.3595,36.3721,2,kaist.png
+National University of Singapore,NUS,Singapore,103.7764,1.2966,3,nus.png
+Tsinghua University,Tsinghua,China,116.3266,39.9998,4,tsinghua.png
+Peking University,Peking,China,116.3104,39.9929,2,peking.png
+Indian Institute of Technology Bombay,IIT Bombay,India,72.9159,19.1334,3,iitbombay.png
+University of São Paulo,USP,Brazil,-46.7298,-23.5590,2,usp.png
+UNAM,UNAM,Mexico,-99.1870,19.3262,2,unam.png
+Delft University of Technology,TU Delft,Netherlands,4.3736,52.0021,2,tudelft.png
+KTH Royal Institute of Technology,KTH,Sweden,18.0686,59.3293,2,kth.png
+Technion – Israel Institute of Technology,Technion,Israel,35.0254,32.7768,2,technion.png
+University of Cape Town,UCT,South Africa,18.4610,-33.9577,2,uct.png
+Khalifa University,Khalifa,United Arab Emirates,54.4349,24.4539,2,khalifa.png
+Politecnico di Milano,PoliMi,Italy,9.2270,45.4787,2,polimi.png

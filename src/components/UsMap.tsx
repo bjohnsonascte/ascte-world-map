@@ -135,7 +135,10 @@ export default function UsMap({
       {/* Clicking empty space (anywhere not a state) clears the selection.
           Right padding reserves room for the international inset so it never
           overlaps the US map. */}
-      <div className="min-h-0 flex-1 md:pr-60" onClick={onClearSelection}>
+      <div
+        className="map-viewport relative min-h-0 flex-1 md:pr-60"
+        onClick={onClearSelection}
+      >
         <ComposableMap
           projection="geoAlbersUsa"
           projectionConfig={{ scale: 1150 }}
@@ -172,13 +175,13 @@ export default function UsMap({
             />
           </ZoomableGroup>
         </ComposableMap>
-      </div>
 
-      {/* Small world inset for schools outside the US */}
-      <InternationalInset />
-
-      {/* Zoom controls — bottom-left of the map container */}
-      <div className="absolute bottom-3 left-3 z-20 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+        {/* Zoom controls — pinned to the bottom-left of the map itself so
+            they never collide with the international bar / legend below. */}
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute bottom-3 left-3 z-20 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md"
+        >
         <button
           type="button"
           onClick={zoomIn}
@@ -204,7 +207,12 @@ export default function UsMap({
         >
           ⤢
         </button>
+        </div>
       </div>
+
+      {/* Schools outside the US. Landscape: floats over the map's top-right.
+          Portrait (see index.css): docks as a compact bar below the map. */}
+      <InternationalInset />
 
       <div className="shrink-0 px-3 pb-2 pt-1" aria-hidden="true">
         <div className="flex justify-end">

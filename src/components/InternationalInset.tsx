@@ -14,8 +14,8 @@ export default function InternationalInset() {
   if (internationalSchools.length === 0) return null;
 
   return (
-    <div className="absolute right-3 top-3 z-20 w-55 overflow-hidden rounded-lg border border-gray-200 bg-white/95 shadow-md backdrop-blur">
-      <div className="flex items-center justify-between border-b border-gray-100 px-3 py-1.5">
+    <div className="international-inset absolute right-3 top-3 z-20 w-55 overflow-hidden rounded-lg border border-gray-200 bg-white/95 shadow-md backdrop-blur">
+      <div className="intl-header flex items-center justify-between border-b border-gray-100 px-3 py-1.5">
         <span className="text-xs font-semibold text-gray-700">
           International
         </span>
@@ -25,6 +25,7 @@ export default function InternationalInset() {
       </div>
 
       <ComposableMap
+        className="intl-minimap"
         projection="geoEqualEarth"
         projectionConfig={{ scale: 40 }}
         width={220}
@@ -70,7 +71,7 @@ export default function InternationalInset() {
         ))}
       </ComposableMap>
 
-      <ul className="max-h-24 overflow-y-auto px-3 py-1.5">
+      <ul className="intl-list max-h-24 overflow-y-auto px-3 py-1.5">
         {internationalSchools.map((school) => (
           <li
             key={school.name}

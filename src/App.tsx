@@ -22,12 +22,21 @@ function App() {
     <div className="portrait-layout flex h-[100dvh] flex-col overflow-hidden bg-ascte-navy px-4 py-4 sm:px-6 lg:px-8">
       <div className="portrait-container mx-auto flex w-full min-h-0 flex-1 flex-col">
         <header className="mb-3 shrink-0 text-center sm:mb-4">
-          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            ASCTE University Map
-          </h1>
-          <p className="mt-1 text-sm text-blue-200/70">
-            Acceptances &amp; matriculation — Classes of 2023–2026
-          </p>
+          <div className="flex items-center justify-center gap-3 sm:gap-4">
+            <img
+              src="/ascte-logo.png"
+              alt="ASCTE crest"
+              className="h-12 w-12 shrink-0 sm:h-16 sm:w-16"
+            />
+            <div className="text-left">
+              <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                ASCTE University Map
+              </h1>
+              <p className="mt-1 text-sm text-blue-200/70">
+                Acceptances &amp; matriculation — Classes of 2023–2026
+              </p>
+            </div>
+          </div>
           <div className="mt-3 inline-flex gap-8 rounded-full border border-white/10 bg-white/10 px-6 py-2 text-sm text-blue-100/70 backdrop-blur">
             <span>
               <strong className="text-white">{schoolCount}</strong> universities

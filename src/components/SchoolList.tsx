@@ -31,11 +31,9 @@ export default function SchoolList({ selectedState }: SchoolListProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="shrink-0 border-b border-gray-100 px-5 py-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Schools Attended
-        </h2>
-        <p className="mt-0.5 text-xs text-gray-400">
+      <div className="shrink-0 border-b-2 border-ascte-crimson bg-ascte-navy px-5 py-4">
+        <h2 className="text-lg font-semibold text-white">Schools Attended</h2>
+        <p className="mt-0.5 text-xs text-blue-200/80">
           {selectedState
             ? `Filtered: ${selectedState} (${filtered.length})`
             : `${filtered.length} universities — sorted A–Z`}
@@ -45,7 +43,7 @@ export default function SchoolList({ selectedState }: SchoolListProps) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search schools..."
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-ascte-crimson focus:ring-1 focus:ring-ascte-crimson/30"
+          className="mt-2 w-full rounded-lg border border-white/20 bg-white/95 px-3 py-1.5 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-ascte-crimson focus:ring-1 focus:ring-ascte-crimson/30"
         />
       </div>
 
@@ -62,9 +60,9 @@ export default function SchoolList({ selectedState }: SchoolListProps) {
           filtered.map((school, i) => (
             <li
               key={school.name}
-              className="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-gray-50"
+              className="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-ascte-navy/5"
             >
-              <span className="w-6 shrink-0 text-xs font-medium text-gray-300">
+              <span className="w-6 shrink-0 text-xs font-semibold text-ascte-navy/40">
                 {i + 1}
               </span>
 
@@ -75,7 +73,7 @@ export default function SchoolList({ selectedState }: SchoolListProps) {
               />
 
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-800">
+                <p className="truncate text-sm font-medium text-ascte-navy">
                   {school.name}
                 </p>
                 <p className="truncate text-xs text-gray-400">

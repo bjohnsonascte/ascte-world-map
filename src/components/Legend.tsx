@@ -25,7 +25,7 @@ export default function Legend({ maxValue }: LegendProps) {
       role="img"
       aria-label={`Color legend: 0 to ${maxValue}+ universities per state`}
     >
-      <span className="text-xs font-medium text-gray-500">
+      <span className="text-xs font-semibold text-ascte-navy">
         Universities per state
       </span>
       <svg

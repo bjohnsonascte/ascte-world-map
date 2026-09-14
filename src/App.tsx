@@ -19,7 +19,7 @@ function App() {
   }, []);
 
   return (
-    <div className="portrait-layout flex h-[100dvh] flex-col overflow-hidden bg-ascte-navy px-4 py-4 sm:px-6 lg:px-8">
+    <div className="portrait-layout flex h-dvh flex-col overflow-hidden bg-ascte-navy px-4 py-4 sm:px-6 lg:px-8">
       <div className="portrait-container mx-auto flex w-full min-h-0 flex-1 flex-col">
         <header className="mb-3 shrink-0 text-center sm:mb-4">
           <div className="flex items-center justify-center gap-3 sm:gap-4">
@@ -48,15 +48,15 @@ function App() {
         </header>
 
         <div className="portrait-grid grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
-          <div className="portrait-map-panel flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
-            <div className="shrink-0 border-b border-gray-100 px-6 py-4">
-              <h2 className="text-lg font-semibold text-gray-800">
+          <div className="portrait-map-panel flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-white/15">
+            <div className="shrink-0 border-b-2 border-ascte-crimson bg-ascte-navy px-6 py-4">
+              <h2 className="text-lg font-semibold text-white">
                 Universities by State
               </h2>
               {selectedState && (
                 <button
                   onClick={() => setSelectedState(null)}
-                  className="mt-1 text-xs text-ascte-crimson hover:underline"
+                  className="mt-1 text-xs text-blue-200 hover:text-white hover:underline"
                 >
                   Showing: {selectedState} — click to clear
                 </button>
@@ -69,7 +69,7 @@ function App() {
             />
           </div>
 
-          <div className="portrait-list-panel flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+          <div className="portrait-list-panel flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-white/15">
             <SchoolList selectedState={selectedState} />
           </div>
         </div>
